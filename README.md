@@ -82,3 +82,5 @@ EOF
    72  kubectl get nodes
    73  kubectl get nodes -o wide
    74  kubectl taint nodes <NODE-NAME> node-role.kubernetes.io/master:NoSchedule-
+
+	
