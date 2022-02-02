@@ -1,0 +1,393 @@
+root@k8s-prod-controlplane1:~# kubectl version
+Client Version: version.Info{Major:"1", Minor:"18", GitVersion:"v1.18.20", GitCommit:"1f3e19b7beb1cc0110255668c4238ed63dadb7ad", GitTreeState:"clean", BuildDate:"2021-06-16T12:58:51Z", GoVersion:"go1.13.15", Compiler:"gc", Platform:"linux/amd64"}
+Server Version: version.Info{Major:"1", Minor:"18", GitVersion:"v1.18.20", GitCommit:"1f3e19b7beb1cc0110255668c4238ed63dadb7ad", GitTreeState:"clean", BuildDate:"2021-06-16T12:51:17Z", GoVersion:"go1.13.15", Compiler:"gc", Platform:"linux/amd64"}
+
+
+root@k8s-prod-controlplane1:~# containerd --version
+containerd containerd.io 1.4.8 7eba5930496d9bbe375fdf71603e610ad737d2b2
+
+https://www.liquidweb.com/kb/how-to-install-kubernetes-using-kubeadm-on-ubuntu-18/
+
+https://kubernetes.io/docs/setup/production-environment/container-runtimes/#containerd
+
+kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+
+
+
+root@master:/etc/systemd/system# sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+I1105 15:15:46.025455   31584 version.go:255] remote version is much newer: v1.22.3; falling back to: stable-1.18
+W1105 15:15:46.255936   31584 configset.go:202] WARNING: kubeadm cannot validate component configs for API groups [kubelet.config.k8s.io kubeproxy.config.k8s.io]
+[init] Using Kubernetes version: v1.18.20
+[preflight] Running pre-flight checks
+[preflight] Pulling images required for setting up a Kubernetes cluster
+[preflight] This might take a minute or two, depending on the speed of your internet connection
+[preflight] You can also perform this action in beforehand using 'kubeadm config images pull'
+[kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
+[kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
+[kubelet-start] Starting the kubelet
+[certs] Using certificateDir folder "/etc/kubernetes/pki"
+[certs] Generating "ca" certificate and key
+[certs] Generating "apiserver" certificate and key
+[certs] apiserver serving cert is signed for DNS names [master kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local] and IPs [10.96.0.1 46.101.13.32]
+[certs] Generating "apiserver-kubelet-client" certificate and key
+[certs] Generating "front-proxy-ca" certificate and key
+[certs] Generating "front-proxy-client" certificate and key
+[certs] Generating "etcd/ca" certificate and key
+[certs] Generating "etcd/server" certificate and key
+[certs] etcd/server serving cert is signed for DNS names [master localhost] and IPs [46.101.13.32 127.0.0.1 ::1]
+[certs] Generating "etcd/peer" certificate and key
+[certs] etcd/peer serving cert is signed for DNS names [master localhost] and IPs [46.101.13.32 127.0.0.1 ::1]
+[certs] Generating "etcd/healthcheck-client" certificate and key
+[certs] Generating "apiserver-etcd-client" certificate and key
+[certs] Generating "sa" key and public key
+[kubeconfig] Using kubeconfig folder "/etc/kubernetes"
+[kubeconfig] Writing "admin.conf" kubeconfig file
+[kubeconfig] Writing "kubelet.conf" kubeconfig file
+[kubeconfig] Writing "controller-manager.conf" kubeconfig file
+[kubeconfig] Writing "scheduler.conf" kubeconfig file
+[control-plane] Using manifest folder "/etc/kubernetes/manifests"
+[control-plane] Creating static Pod manifest for "kube-apiserver"
+[control-plane] Creating static Pod manifest for "kube-controller-manager"
+W1105 15:16:08.701668   31584 manifests.go:225] the default kube-apiserver authorization-mode is "Node,RBAC"; using "Node,RBAC"
+[control-plane] Creating static Pod manifest for "kube-scheduler"
+W1105 15:16:08.702686   31584 manifests.go:225] the default kube-apiserver authorization-mode is "Node,RBAC"; using "Node,RBAC"
+[etcd] Creating static Pod manifest for local etcd in "/etc/kubernetes/manifests"
+[wait-control-plane] Waiting for the kubelet to boot up the control plane as static Pods from directory "/etc/kubernetes/manifests". This can take up to 4m0s
+[apiclient] All control plane components are healthy after 14.002688 seconds
+[upload-config] Storing the configuration used in ConfigMap "kubeadm-config" in the "kube-system" Namespace
+[kubelet] Creating a ConfigMap "kubelet-config-1.18" in namespace kube-system with the configuration for the kubelets in the cluster
+[upload-certs] Skipping phase. Please see --upload-certs
+[mark-control-plane] Marking the node master as control-plane by adding the label "node-role.kubernetes.io/master=''"
+[mark-control-plane] Marking the node master as control-plane by adding the taints [node-role.kubernetes.io/master:NoSchedule]
+[bootstrap-token] Using token: hbva5c.y60e97oj9lbjo3jw
+[bootstrap-token] Configuring bootstrap tokens, cluster-info ConfigMap, RBAC Roles
+[bootstrap-token] configured RBAC rules to allow Node Bootstrap tokens to get nodes
+[bootstrap-token] configured RBAC rules to allow Node Bootstrap tokens to post CSRs in order for nodes to get long term certificate credentials
+[bootstrap-token] configured RBAC rules to allow the csrapprover controller automatically approve CSRs from a Node Bootstrap Token
+[bootstrap-token] configured RBAC rules to allow certificate rotation for all node client certificates in the cluster
+[bootstrap-token] Creating the "cluster-info" ConfigMap in the "kube-public" namespace
+[kubelet-finalize] Updating "/etc/kubernetes/kubelet.conf" to point to a rotatable kubelet client certificate and key
+[addons] Applied essential addon: CoreDNS
+[addons] Applied essential addon: kube-proxy
+
+Your Kubernetes control-plane has initialized successfully!
+
+To start using your cluster, you need to run the following as a regular user:
+
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+You should now deploy a pod network to the cluster.
+Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
+  https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+Then you can join any number of worker nodes by running the following on each as root:
+
+kubeadm join 46.101.13.32:6443 --token hbva5c.y60e97oj9lbjo3jw \
+    --discovery-token-ca-cert-hash sha256:4827894b33387de25db89e7a8aafc6094268a691458fb639d957c95837dd6bad
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+root@master:/etc/systemd/system# history 
+    1  hostname
+    2  hostname -I
+    3  echo "46.101.13.32 master" >> /etc/hosts
+    4  cat /etc/hosts
+    5  ping master
+    6  vim /etc/hosts
+    7  ping master
+    8  echo "46.101.26.157 worker01" >> /etc/hosts
+    9  cat /etc/hosts
+   10  apt update -y && apt upgrade -y
+   11  sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+   12  swapoff -a
+   13  apt-get update && apt-get install -y 
+   14  apt install apt-transport-https curl
+   15  curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+   16  echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | tee /etc/apt/sources.list.d/kubernetes.list
+   17  deb https://apt.kubernetes.io/ kubernetes-xenial main
+   18  apt update
+   19  apt -y install vim git curl wget kubelet=1.18.20-00 kubeadm=1.18.20-00 kubectl=1.18.20-00
+   20  sudo apt-mark hold kubelet kubeadm kubectl
+   21  apt install containerd
+   22  cat <<EOF | sudo tee /etc/modules-load.d/containerd.conf
+overlay
+br_netfilter
+EOF
+
+   23  sudo modprobe overlay
+   24  sudo modprobe br_netfilter
+   25  cat <<EOF | sudo tee /etc/sysctl.d/99-kubernetes-cri.conf
+net.bridge.bridge-nf-call-iptables  = 1
+net.ipv4.ip_forward                 = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+EOF
+
+   26  sudo sysctl --system
+   27  sudo mkdir -p /etc/containerd
+   28  containerd config default | sudo tee /etc/containerd/config.toml
+   29  cd /etc/containerd/
+   30  ls
+   31  vim config.toml 
+   32  sudo systemctl restart containerd
+   33  sudo systemctl status containerd
+   34  sudo systemctl status containerd
+   35  kubectl version --client && kubeadm version
+   36  systemctl enable --now kubelet
+   37  systemctl status kubelet.service 
+   38  systemctl disable --now kubelet.service 
+   39  $ sudo mkdir -p  /etc/systemd/system/kubelet.service.d/
+   40  $ cat << EOF | sudo tee  /etc/systemd/system/kubelet.service.d/0-containerd.conf
+[Service]                                                 
+Environment="KUBELET_EXTRA_ARGS=--container-runtime=remote --runtime-request-timeout=15m --container-runtime-endpoint=unix:///run/containerd/containerd.sock"
+EOF
+
+   41  sudo mkdir -p  /etc/systemd/system/kubelet.service.d/
+   42  cat << EOF | sudo tee  /etc/systemd/system/kubelet.service.d/0-containerd.conf
+[Service]                                                 
+Environment="KUBELET_EXTRA_ARGS=--container-runtime=remote --runtime-request-timeout=15m --container-runtime-endpoint=unix:///run/containerd/containerd.sock"
+EOF
+
+   43  sudo systemctl daemon-reload
+   44  sudo systemctl daemon-reload
+   45  sudo systemctl restart containerd
+   46  sudo systemctl status containerd
+   47  sudo systemctl restart containerd
+   48  sudo systemctl status containerd
+   49  systemctl enable --now kubelet.service 
+   50  systemctl status kubelet.service 
+   51  systemctl restart kubelet.service 
+   52  systemctl status kubelet.service 
+   53  journalctl -xe
+   54  cd /etc/systemd/system/
+   55  ls
+   56  lsmod | grep br_netfilter
+   57  systemctl enable kubelet
+   58  systemctl start kubelet
+   59  systemctl status kubelet.service 
+   60  vim /etc/systemd/system/kubelet.service.d/0-containerd.conf
+   61  sudo apt-get update
+   62  sudo apt-get install libseccomp2
+   63  systemctl daemon-reload
+   64  systemctl restart kubelet.service 
+   65  systemctl status kubelet.service 
+   66  sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+   67  mkdir -p $HOME/.kube
+   68  kubectl get nodes
+   69  systemctl status kubelet.service 
+   70  kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+   71  kubectl get po -A
+   72  kubectl get nodes
+   73  kubectl get nodes -o wide
+   74  history
+   
+   
+   
+   
+   
+  
+JOIN COMMAND FOR MASTER AND WORKERS:
+
+  
+   
+root@master:~# kubeadm init --control-plane-endpoint 46.101.13.32  --pod-network-cidr=10.244.0.0/16 --upload-certs
+I1119 17:07:36.568645   24267 version.go:251] remote version is much newer: v1.22.4; falling back to: stable-1.20
+[init] Using Kubernetes version: v1.20.13
+[preflight] Running pre-flight checks
+[preflight] Pulling images required for setting up a Kubernetes cluster
+[preflight] This might take a minute or two, depending on the speed of your internet connection
+[preflight] You can also perform this action in beforehand using 'kubeadm config images pull'
+[certs] Using certificateDir folder "/etc/kubernetes/pki"
+[certs] Generating "ca" certificate and key
+[certs] Generating "apiserver" certificate and key
+[certs] apiserver serving cert is signed for DNS names [kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local master] and IPs [10.96.0.1 46.101.13.32]
+[certs] Generating "apiserver-kubelet-client" certificate and key
+[certs] Generating "front-proxy-ca" certificate and key
+[certs] Generating "front-proxy-client" certificate and key
+[certs] Generating "etcd/ca" certificate and key
+[certs] Generating "etcd/server" certificate and key
+[certs] etcd/server serving cert is signed for DNS names [localhost master] and IPs [46.101.13.32 127.0.0.1 ::1]
+[certs] Generating "etcd/peer" certificate and key
+[certs] etcd/peer serving cert is signed for DNS names [localhost master] and IPs [46.101.13.32 127.0.0.1 ::1]
+[certs] Generating "etcd/healthcheck-client" certificate and key
+[certs] Generating "apiserver-etcd-client" certificate and key
+[certs] Generating "sa" key and public key
+[kubeconfig] Using kubeconfig folder "/etc/kubernetes"
+[kubeconfig] Writing "admin.conf" kubeconfig file
+[kubeconfig] Writing "kubelet.conf" kubeconfig file
+[kubeconfig] Writing "controller-manager.conf" kubeconfig file
+[kubeconfig] Writing "scheduler.conf" kubeconfig file
+[kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
+[kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
+[kubelet-start] Starting the kubelet
+[control-plane] Using manifest folder "/etc/kubernetes/manifests"
+[control-plane] Creating static Pod manifest for "kube-apiserver"
+[control-plane] Creating static Pod manifest for "kube-controller-manager"
+[control-plane] Creating static Pod manifest for "kube-scheduler"
+[etcd] Creating static Pod manifest for local etcd in "/etc/kubernetes/manifests"
+[wait-control-plane] Waiting for the kubelet to boot up the control plane as static Pods from directory "/etc/kubernetes/manifests". This can take up to 4m0s
+[apiclient] All control plane components are healthy after 12.507961 seconds
+[upload-config] Storing the configuration used in ConfigMap "kubeadm-config" in the "kube-system" Namespace
+[kubelet] Creating a ConfigMap "kubelet-config-1.20" in namespace kube-system with the configuration for the kubelets in the cluster
+[upload-certs] Storing the certificates in Secret "kubeadm-certs" in the "kube-system" Namespace
+[upload-certs] Using certificate key:
+e689ea8407108391ce7a22d2bdf173e442f7fcaafc0170ffcf0efc263fcf51dc
+[mark-control-plane] Marking the node master as control-plane by adding the labels "node-role.kubernetes.io/master=''" and "node-role.kubernetes.io/control-plane='' (deprecated)"
+[mark-control-plane] Marking the node master as control-plane by adding the taints [node-role.kubernetes.io/master:NoSchedule]
+[bootstrap-token] Using token: 645olu.dk526ogjbaqyihb5
+[bootstrap-token] Configuring bootstrap tokens, cluster-info ConfigMap, RBAC Roles
+[bootstrap-token] configured RBAC rules to allow Node Bootstrap tokens to get nodes
+[bootstrap-token] configured RBAC rules to allow Node Bootstrap tokens to post CSRs in order for nodes to get long term certificate credentials
+[bootstrap-token] configured RBAC rules to allow the csrapprover controller automatically approve CSRs from a Node Bootstrap Token
+[bootstrap-token] configured RBAC rules to allow certificate rotation for all node client certificates in the cluster
+[bootstrap-token] Creating the "cluster-info" ConfigMap in the "kube-public" namespace
+[kubelet-finalize] Updating "/etc/kubernetes/kubelet.conf" to point to a rotatable kubelet client certificate and key
+[addons] Applied essential addon: CoreDNS
+[addons] Applied essential addon: kube-proxy
+
+Your Kubernetes control-plane has initialized successfully!
+
+To start using your cluster, you need to run the following as a regular user:
+
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+Alternatively, if you are the root user, you can run:
+
+  export KUBECONFIG=/etc/kubernetes/admin.conf
+
+You should now deploy a pod network to the cluster.
+Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
+  https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+You can now join any number of the control-plane node running the following command on each as root:
+
+  kubeadm join 46.101.13.32:6443 --token 645olu.dk526ogjbaqyihb5 \
+    --discovery-token-ca-cert-hash sha256:39567247aac41edcdaaac3102487962967d881f0e7d3b916582663658650c14a \
+    --control-plane --certificate-key e689ea8407108391ce7a22d2bdf173e442f7fcaafc0170ffcf0efc263fcf51dc
+
+Please note that the certificate-key gives access to cluster sensitive data, keep it secret!
+As a safeguard, uploaded-certs will be deleted in two hours; If necessary, you can use
+"kubeadm init phase upload-certs --upload-certs" to reload certs afterward.
+
+Then you can join any number of worker nodes by running the following on each as root:
+
+kubeadm join 46.101.13.32:6443 --token 645olu.dk526ogjbaqyihb5 \
+    --discovery-token-ca-cert-hash sha256:39567247aac41edcdaaac3102487962967d881f0e7d3b916582663658650c14a
+   
+   
+   
+   
+   
+   
+
+MASTER 2 HISTORY:
+
+root@master2:/etc/containerd# history 
+    1  service containerd status
+    2  exit
+    3  apt update
+    4  echo "46.101.13.32 master" >> /etc/hosts
+    5  echo "46.101.26.157 worker01" >> /etc/hosts
+    6  echo "178.128.171.240 master2" >> /etc/hosts
+    7  ping master2
+    8  vim /etc/hosts
+    9  ping master2
+   10  cat /etc/hosts
+   11  apt update -y && apt upgrade -y
+   12  sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+   13  swapoff -a
+   14  apt-get update && apt-get install -y
+   15  apt install apt-transport-https curl
+   16  curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+   17  echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | tee /etc/apt/sources.list.d/kubernetes.list
+   18  deb https://apt.kubernetes.io/ kubernetes-xenial main
+   19  apt update
+   20  apt -y install vim git curl wget kubelet=1.20.0-00 kubeadm=1.20.0-00 kubectl=1.20.0-00
+   21  sudo apt-mark hold kubelet kubeadm kubectl
+   22  apt install containerd
+   23  cat <<EOF | sudo tee /etc/modules-load.d/containerd.conf
+   24  sudo modprobe overlay
+   25  sudo modprobe br_netfilter
+   26  cat <<EOF | sudo tee /etc/sysctl.d/99-kubernetes-cri.conf
+net.bridge.bridge-nf-call-iptables  = 1
+net.ipv4.ip_forward                 = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+EOF
+
+   27  sudo sysctl --system
+   28  sudo mkdir -p /etc/containerd
+   29  containerd config default | sudo tee /etc/containerd/config.toml
+   30  cd /etc/containerd/
+   31  ls
+   32  vim config.toml 
+   33  sudo systemctl restart containerd
+   34  sudo systemctl status containerd
+   35  kubectl version --client && kubeadm version
+   36  systemctl enable --now kubelet
+   37  sudo mkdir -p  /etc/systemd/system/kubelet.service.d/
+   38  cat << EOF | sudo tee  /etc/systemd/system/kubelet.service.d/0-containerd.conf
+[Service]                                                 
+Environment="KUBELET_EXTRA_ARGS=--container-runtime=remote --runtime-request-timeout=15m --container-runtime-endpoint=unix:///run/containerd/containerd.sock"
+EOF
+
+   39  sudo mkdir -p  /etc/systemd/system/kubelet.service.d/
+   40  cat << EOF | sudo tee  /etc/systemd/system/kubelet.service.d/0-containerd.conf
+[Service]                                                 
+Environment="KUBELET_EXTRA_ARGS=--container-runtime=remote --runtime-request-timeout=15m --container-runtime-endpoint=unix:///run/containerd/containerd.sock"
+EOF
+
+   41  sudo systemctl daemon-reload
+   42  sudo systemctl restart containerd
+   43  systemctl enable --now kubelet.service
+   44  systemctl status kubelet.service
+   45  vim /etc/systemd/system/kubelet.service.d/0-containerd.conf
+   46  sudo apt-get update
+   47  sudo apt-get install libseccomp2
+   48  systemctl daemon-reload
+   49  systemctl restart kubelet.service
+   50  kubectl get po -A |grep mag
+   51  kubeadm join 46.101.13.32:6443 --token 645olu.dk526ogjbaqyihb5     --discovery-token-ca-cert-hash sha256:39567247aac41edcdaaac3102487962967d881f0e7d3b916582663658650c14a     --control-plane --certificate-key e689ea8407108391ce7a22d2bdf173e442f7fcaafc0170ffcf0efc263fcf51dc
+   52  mkdir -p $HOME/.kube
+   53  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+   54  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+   55  kubectl get nodes -o wide
+   56  cat /etc/hosts
+   57  kubectl get po -A
+   58  kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+   59  kubectl get po -A -w
+   60  kubectl get po -A
+   61  history
+
+
+
+
+   
+   
+   
+   use fuelwallet
+db.createUser(
+  {
+    user: "bilal",
+    pwd:  passwordPrompt(),   // or cleartext password
+    roles: [ { role: "readWrite", db: "fuelwallet" },
+             { role: "read", db: "reporting" } ]
+  }
+)
